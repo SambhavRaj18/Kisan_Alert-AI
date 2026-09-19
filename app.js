@@ -584,6 +584,43 @@ document.addEventListener("DOMContentLoaded", () => {
     lucide.createIcons();
   }
 
+  // Parse URL query parameter for auto-login bypass
+  const urlParams = new URLSearchParams(window.location.search);
+  const autoRole = urlParams.get("role");
+  if (autoRole === "farmer") {
+    const defaultRamesh = {
+      name: "Ramesh Kumar",
+      phone: "+91 98480 12345",
+      district: "kolar",
+      state: "Karnataka",
+      land: 3.5,
+      n: 48, p: 35, k: 40, ph: 6.2, moist: 21
+    };
+    loginUser("farmer", defaultRamesh);
+  } else if (autoRole === "expert") {
+    loginUser("expert");
+  }
+
+  // Open mobile settings menu drawer for automated headless screenshot testing
+  if (urlParams.get("test_menu") === "1") {
+    setTimeout(() => {
+      const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+      const headerControlsMenu = document.getElementById("header-controls-menu");
+      if (mobileMenuToggle && headerControlsMenu) {
+        headerControlsMenu.classList.add("active");
+        mobileMenuToggle.classList.add("active");
+      }
+    }, 500);
+  }
+
+
+
+  // Parse URL query parameter for phone view routing
+  const initialPhoneView = urlParams.get("phoneView");
+  if (initialPhoneView && ["sms", "voice", "app"].includes(initialPhoneView)) {
+    switchPhoneView(initialPhoneView);
+  }
+
   // Location search results selector trigger
   const searchInputTrigger = document.getElementById("search-input-trigger");
   const searchInput = document.getElementById("location-search-input");
@@ -607,16 +644,48 @@ document.addEventListener("DOMContentLoaded", () => {
     renderSearchDropdownItems(e.target.value);
   });
 
-  // Global document click to close locations list
-  document.addEventListener("click", () => {
-    dropdownResults.classList.remove("active");
-  });
+  // Mobile settings menu drawer toggle
+  const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+  const headerControlsMenu = document.getElementById("header-controls-menu");
+
+  if (mobileMenuToggle && headerControlsMenu) {
+    mobileMenuToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      headerControlsMenu.classList.toggle("active");
+      mobileMenuToggle.classList.toggle("active");
+    });
+
+    // Close mobile menu when clicking outside OR clicking an interactive control inside
+    document.addEventListener("click", (e) => {
+      const isDropdownClick = headerControlsMenu.contains(e.target);
+      const isToggleClick = mobileMenuToggle.contains(e.target);
+      
+      if (!isDropdownClick && !isToggleClick) {
+        headerControlsMenu.classList.remove("active");
+        mobileMenuToggle.classList.remove("active");
+      } else if (isDropdownClick && (e.target.closest('#btn-logout') || e.target.closest('#theme-toggle-btn') || e.target.closest('.user-profile-badge') || e.target.closest('.theme-toggle-btn'))) {
+        // Delay slightly to allow other click events to register
+        setTimeout(() => {
+          headerControlsMenu.classList.remove("active");
+          mobileMenuToggle.classList.remove("active");
+        }, 150);
+      }
+    });
+  }
 
   // Language selectors
   const langSelect = document.getElementById("language-select");
   langSelect.addEventListener("change", (e) => {
     state.language = e.target.value;
     updateLanguage(state.language);
+    
+    // Close mobile settings menu drawer when a new language is selected
+    const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+    const headerControlsMenu = document.getElementById("header-controls-menu");
+    if (mobileMenuToggle && headerControlsMenu) {
+      headerControlsMenu.classList.remove("active");
+      mobileMenuToggle.classList.remove("active");
+    }
   });
 
   // Main navigation buttons switcher
@@ -693,6 +762,42 @@ document.addEventListener("DOMContentLoaded", () => {
       uploadText.textContent = `Attached: ${picker.querySelector(".picker-name").textContent}`;
     });
   });
+
+  // Camera upload triggers & File Reader integration
+  const fileUploader = document.getElementById("file-uploader");
+  const cameraTrigger = document.getElementById("camera-upload-trigger");
+  if (cameraTrigger && fileUploader) {
+    cameraTrigger.addEventListener("click", () => {
+      fileUploader.click();
+    });
+
+    fileUploader.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        cameraTrigger.classList.add("has-image");
+        cameraTrigger.style.backgroundImage = `url('${event.target.result}')`;
+        document.getElementById("upload-box-text").textContent = `Attached: ${file.name}`;
+        
+        // Register custom user upload in state
+        state.selectedDisease = "custom";
+        // Create custom entry in diseaseDatabase dynamically for the uploaded file
+        diseaseDatabase.custom = {
+          disease: "User Custom Leaf Scan",
+          scientific: "General Phytopathology Scan",
+          confidence: "87%",
+          symptoms: `User uploaded image file "${file.name}". Irregular chlorotic margins and necrotic leaf spot patches detected.`,
+          organicRemedy: "Apply fresh bio-fungicide Neem solution (5ml/L) and improve soil aeration.",
+          chemicalRemedy: "Apply copper oxychloride (3g/L) if fungal spots extend across more than 20% of the leaf nodes.",
+          rskAction: `Dispatched photo upload "${file.name}" to regional RSK specialist for expert analysis.`,
+          audioTranscript: "Uploaded custom crop specimen photo for immediate diagnosis."
+        };
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 
   document.getElementById("btn-record-voice-memo").addEventListener("click", toggleVoiceMemoRecording);
   document.getElementById("btn-submit-app-diagnosis").addEventListener("click", submitAppDiagnosisTicket);
@@ -873,6 +978,12 @@ function loginUser(role, farmerData) {
   document.body.classList.remove("logged-out");
   document.body.classList.add("logged-in");
   
+  // Close mobile settings menu drawer when logging in
+  const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+  const headerControlsMenu = document.getElementById("header-controls-menu");
+  if (mobileMenuToggle) mobileMenuToggle.classList.remove("active");
+  if (headerControlsMenu) headerControlsMenu.classList.remove("active");
+  
   const headerName = document.getElementById("header-user-name");
   const navTelemetry = document.getElementById("sidebar-tab-telemetry");
   const navTickets = document.getElementById("sidebar-tab-tickets");
@@ -954,6 +1065,12 @@ function logoutUser() {
   // Transition body classes for clean layout isolation
   document.body.classList.remove("logged-in");
   document.body.classList.add("logged-out");
+  
+  // Close mobile settings menu drawer when logging out
+  const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+  const headerControlsMenu = document.getElementById("header-controls-menu");
+  if (mobileMenuToggle) mobileMenuToggle.classList.remove("active");
+  if (headerControlsMenu) headerControlsMenu.classList.remove("active");
   
   // Reset tabs to default active
   document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
@@ -2015,3 +2132,5 @@ function updateLanguage(lang) {
     showTicketDetails(state.activeTicketId);
   }
 }
+
+

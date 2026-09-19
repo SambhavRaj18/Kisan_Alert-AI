@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kisan Alert - Solutions Presentation Deck</title>
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    :root {
+      --bg-darker: #020705;
+      --bg-dark: #05100c;
+      --bg-card: rgba(8, 22, 17, 0.75);
+      --border-light: rgba(0, 245, 160, 0.2);
+      --emerald: #00f5a0;
+      --lime: #98ec2a;
+      --amber: #ffb800;
+      --rose: #ff4772;
+      --blue: #00e5ff;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --font-ui: 'Plus Jakarta Sans', sans-serif;
+      --font-display: 'Outfit', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-darker);
+      color: var(--text-primary);
+      font-family: var(--font-ui);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Ambient Background Glow */
+    .ambient-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(140px);
+      opacity: 0.15;
+    }
+    .orb-1 { width: 500px; height: 500px; background-color: var(--emerald); top: -200px; left: -100px; animation: float1 25s infinite alternate ease-in-out; }
+    .orb-2 { width: 600px; height: 600px; background-color: var(--blue); bottom: -200px; right: -150px; animation: float2 30s infinite alternate ease-in-out; }
+
+    @keyframes float1 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 40px) scale(1.1); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    @keyframes float2 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-60px, -40px) scale(0.9); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+
+    /* Header Bar */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      border-bottom: 1px solid var(--border-light);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+      position: relative;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-bg {
+      background: linear-gradient(135deg, rgba(0, 245, 160, 0.25) 0%, rgba(152, 236, 42, 0.1) 100%);
+      border: 1px solid var(--emerald);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--emerald);
+      box-shadow: 0 0 15px rgba(0, 245, 160, 0.2);
+    }
+
+    .logo-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-accent {
+      color: var(--emerald);
+    }
+
+    .header-tag {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      background: rgba(0,0,0,0.2);
+    }
+
+    /* Slides Showcase Window */
+    .slide-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 4rem;
+      z-index: 5;
+      position: relative;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1100px;
+      min-height: 560px;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-light);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      padding: 3rem;
+      position: relative;
+      animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(30px) scale(0.98); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    /* Slide Layout divisions */
+    .slide-body {
+      display: flex;
+      flex: 1;
+      gap: 3rem;
+      align-items: center;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .slide-left {
+      flex: 1.2;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .slide-right {
+      flex: 0.8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 1.5rem;
+      position: relative;
+      padding-right: 2.5rem;
+    }
+
+    /* Phone Mockup Component */
+    .phone-mockup {
+      width: 175px;
+      height: 350px;
+      background: #090d0b;
+      border: 6px solid #1c2621;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 25px rgba(0, 245, 160, 0.15);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .phone-mockup:hover {
+      transform: translateY(-5px) rotate(1deg);
+    }
+    .phone-mockup img {
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+    }
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 12px;
+      background: #1c2621;
+      border-radius: 0 0 8px 8px;
+      z-index: 2;
+    }
+
+    /* Mockup Label Overlay Badges */
+    .mockup-badge {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.4rem 0.85rem;
+      border-radius: 12px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      z-index: 10;
+    }
+    .badge-emerald { background: var(--emerald); color: var(--bg-darker); }
+    .badge-blue { background: var(--blue); color: var(--bg-darker); }
+    .badge-lime { background: var(--lime); color: var(--bg-darker); }
+    .badge-amber { background: var(--amber); color: var(--bg-darker); }
+    .badge-rose { background: var(--rose); color: #ffffff; }
+
+    /* Floating Feature Annotation Cards */
+    .floating-card {
+      position: absolute;
+      background: rgba(8, 22, 17, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.72rem;
+      color: var(--text-primary);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 15;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      animation: floatBadge 4s infinite alternate ease-in-out;
+    }
+    .floating-card i {
+      color: var(--emerald);
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+    
+    @keyframes floatBadge {
+      from { transform: translateY(0); }
+      to { transform: translateY(-6px); }
+    }
+
+    /* Custom visual component blocks for non-image slides */
+    .problems-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .problem-box {
+      background: rgba(255, 71, 114, 0.04);
+      border: 1px dashed rgba(255, 71, 114, 0.2);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      gap: 0.75rem;
+    }
+    .problem-box i { color: var(--rose); flex-shrink: 0; margin-top: 2px; }
+    .problem-box h4 { font-family: var(--font-display); font-size: 1.05rem; margin-bottom: 0.15rem; color: var(--text-primary); }
+    .problem-box p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      width: 100%;
+    }
+    .tech-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.75rem;
+      transition: all 0.3s ease;
+    }
+    .tech-card:hover {
+      border-color: var(--emerald);
+      background: rgba(0, 245, 160, 0.05);
+      transform: translateY(-3px);
+    }
+    .tech-card i { width: 36px; height: 36px; color: var(--emerald); }
+    .tech-card span { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
+    .tech-card p { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* Footer & Controls Menu */
+    footer {
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border-light);
+      padding: 1.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      position: relative;
+    }
+
+    .slide-indicators {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .indicator.active {
+      background: var(--emerald);
+      width: 24px;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 245, 160, 0.4);
+    }
+
+    .controls-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .nav-btn:hover {
+      background: rgba(0, 245, 160, 0.1);
+      border-color: var(--emerald);
+      color: var(--emerald);
+      box-shadow: 0 0 15px rgba(0, 245, 160, 0.15);
+    }
+
+    .btn-action {
+      background: rgba(0, 245, 160, 0.1);
+      border: 1px solid var(--border-light);
+      padding: 0.65rem 1.25rem;
+      border-radius: 30px;
+      color: var(--emerald);
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-action:hover {
+      background: var(--emerald);
+      color: var(--bg-darker);
+      box-shadow: 0 0 20px rgba(0, 245, 160, 0.4);
+    }
+
+    .btn-pdf {
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: var(--blue);
+    }
+    .btn-pdf:hover {
+      background: var(--blue);
+      color: var(--bg-darker);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    }
+
+    .slide-number {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    /* Speaker Notes Drawer */
+    .notes-drawer {
+      position: fixed;
+      bottom: -300px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 1100px;
+      height: 180px;
+      background: rgba(5, 16, 12, 0.97);
+      backdrop-filter: blur(25px);
+      border: 1.5px dashed var(--emerald);
+      border-bottom: none;
+      border-radius: 20px 20px 0 0;
+      z-index: 100;
+      transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+      padding: 1.25rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .notes-drawer.active {
+      bottom: 0;
+    }
+
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 0.35rem;
+    }
+
+    .notes-title {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--emerald);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .notes-close {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .notes-content {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      overflow-y: auto;
+      flex: 1;
+      padding-right: 0.5rem;
+    }
+
+    .notes-content strong {
+      color: var(--text-primary);
+    }
+
+    /* Print styles active on printing-active body */
+    body.printing-active {
+      background-color: var(--bg-darker) !important;
+      color: var(--text-primary) !important;
+      overflow: visible !important;
+      height: auto !important;
+      min-height: auto !important;
+      display: block !important;
+      position: static !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    
+    body.printing-active .ambient-glow,
+    body.printing-active header,
+    body.printing-active footer,
+    body.printing-active .notes-drawer {
+      display: none !important;
+    }
+    
+    body.printing-active .slide-container {
+      display: block !important;
+      padding: 0 !important;
+      height: auto !important;
+      min-height: auto !important;
+      overflow: visible !important;
+      position: static !important;
+    }
+
+    body.printing-active .slide {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      width: 100% !important;
+      height: 100vh !important;
+      min-height: 100vh !important;
+      max-width: none !important;
+      border: 1px solid var(--border-light) !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      background: radial-gradient(circle at 10% 10%, rgba(0, 245, 160, 0.12) 0%, transparent 60%), 
+                  radial-gradient(circle at 90% 90%, rgba(0, 229, 255, 0.1) 0%, transparent 60%), 
+                  #05100c !important;
+      padding: 3.5rem !important;
+      page-break-after: always !important;
+      position: relative !important;
+      color: var(--text-primary) !important;
+      overflow: hidden !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    
+    body.printing-active .slide-body {
+      display: flex !important;
+      flex-direction: row !important;
+      height: auto !important;
+    }
+
+    body.printing-active .phone-mockup {
+      border-color: #1c2621 !important;
+      background: #090d0b !important;
+      box-shadow: 0 0 20px rgba(0, 245, 160, 0.15) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body.printing-active .floating-card {
+      border-color: var(--border-light) !important;
+      background: rgba(8, 22, 17, 0.9) !important;
+      color: var(--text-primary) !important;
+      box-shadow: none !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body.printing-active .problem-box {
+      background: rgba(255, 71, 114, 0.04) !important;
+      border-color: rgba(255, 71, 114, 0.2) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body.printing-active .tech-card {
+      background: rgba(255,255,255,0.02) !important;
+      border-color: rgba(255,255,255,0.06) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <!-- Header Bar -->
+  <header>
+    <div class="logo">
+      <div class="logo-bg">
+        <i data-lucide="sprout"></i>
+      </div>
+      <span class="logo-title">Kisan <span class="logo-accent">Alert</span></span>
+    </div>
+    <span class="header-tag">Interactive Solution Pitch</span>
+  </header>
+
+  <!-- Slides Window -->
+  <div class="slide-container">
+
+    <!-- Slide 1: Welcome / Cover -->
+    <div class="slide active" data-slide="1">
+      <div class="slide-header">
+        <span class="slide-subtitle">01 / Title Deck</span>
+        <span class="slide-number">Slide 1 of 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="slide-left">
+          <h1 class="slide-title">Kisan Alert Platform</h1>
+          <p class="slide-desc">A voice-and-SMS agricultural intelligence platform in local Indic languages designed to empower small and marginal farmers with data-driven agronomic guidance.</p>
+          <div class="slide-bullets">
+            <div class="bullet-item">
+              <i data-lucide="check-circle-2" class="bullet-icon"></i>
+              <span><strong>Addressing Climate Risk</strong>: Safeguards crop investments by replacing guess-work planting with telemetry data.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="check-circle-2" class="bullet-icon"></i>
+              <span><strong>Inclusive Digital Architecture</strong>: Solves the accessibility divide by mirroring advanced agronomy on feature-phone SMS and IVR voice systems.</span>
+            </div>
+          </div>
+        </div>
+        <div class="slide-right">
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <img src="assets/slide_welcome.png" alt="Welcome Login Screen Mockup">
+            <div class="mockup-badge badge-emerald">Farmer Gateway</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: The Core Problem -->
+    <div class="slide" data-slide="2">
+      <div class="slide-header">
+        <span class="slide-subtitle">02 / The Crisis</span>
+        <span class="slide-number">Slide 2 of 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="slide-left">
+          <h2 class="slide-title">The Problem: Vulnerability to Monsoon and Lack of Guidance</h2>
+          <p class="slide-desc">Marginal farmers face regular crop failures and resource wastage due to critical gaps in weather advisories and diagnostic access.</p>
+          <div class="problems-grid">
+            <div class="problem-box">
+              <i data-lucide="cloud-lightning"></i>
+              <div>
+                <h4>Unpredictable Monsoons</h4>
+                <p>Extreme climate shifts lead to unexpected localized dry-spells, ruining crop cycles without warning.</p>
+              </div>
+            </div>
+            <div class="problem-box">
+              <i data-lucide="help-circle"></i>
+              <div>
+                <h4>Hearsay-Based Decisions</h4>
+                <p>Farmers plant based on habit or hearsay rather than soil health parameters, groundwater levels, or localized rainfall forecasts.</p>
+              </div>
+            </div>
+            <div class="problem-box" style="background: rgba(255, 71, 114, 0.02); border-color: rgba(255, 71, 114, 0.15);">
+              <i data-lucide="trending-down"></i>
+              <div>
+                <h4>Wasted Resources & Financial Ruin</h4>
+                <p>Wrong seed selection and improper irrigation timing lead to wasted input resources and massive financial debts.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: The Challenge & Components -->
+    <div class="slide" data-slide="3">
+      <div class="slide-header">
+        <span class="slide-subtitle">03 / The Challenge</span>
+        <span class="slide-number">Slide 3 of 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="slide-left">
+          <h2 class="slide-title">The Challenge: Inclusive Indic Voice & SMS Intelligence</h2>
+          <p class="slide-desc">Build an accessible, voice-and-SMS platform in Indic languages targeting smallholders, composed of three core components:</p>
+          <div class="problems-grid">
+            <div class="problem-box" style="background: rgba(0, 245, 160, 0.02); border-color: rgba(0, 245, 160, 0.15);">
+              <i data-lucide="sprout" style="color: var(--emerald);"></i>
+              <div>
+                <h4>1. Smart Crop Recommendation Engine</h4>
+                <p>Matches regional soil health parameters and satellite data to ideal seed varieties.</p>
+              </div>
+            </div>
+            <div class="problem-box" style="background: rgba(0, 229, 255, 0.02); border-color: rgba(0, 229, 255, 0.15);">
+              <i data-lucide="bell" style="color: var(--blue);"></i>
+              <div>
+                <h4>2. Real-Time Advisory & Dry-Spell Alerts</h4>
+                <p>Aggregates ground sensors and localized forecasts to trigger irrigation warnings.</p>
+              </div>
+            </div>
+            <div class="problem-box" style="background: rgba(255, 184, 0, 0.02); border-color: rgba(255, 184, 0, 0.15);">
+              <i data-lucide="shield-alert" style="color: var(--amber);"></i>
+              <div>
+                <h4>3. Crop Health AI Diagnostic Logger</h4>
+                <p>Scans leaf pathology via photo/voice, routing cases directly to local Rythu Seva Kendra experts.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-right">
+          <div class="phone-mockup" style="transform: scale(0.9) rotate(-3deg);">
+            <div class="phone-notch"></div>
+            <img src="assets/slide_welcome.png" alt="Portal Welcome Screen Mockup">
+            <div class="mockup-badge badge-emerald">1. Farmer Portal</div>
+          </div>
+          <div class="phone-mockup" style="transform: scale(0.9) rotate(3deg); margin-left: -20px;">
+            <div class="phone-notch"></div>
+            <img src="assets/slide_app.png" alt="App Verification Mockup">
+            <div class="mockup-badge badge-blue">2. Seva Mobile App</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Component 1 - Smart Crop Recommendation -->
+    <div class="slide" data-slide="4">
+      <div class="slide-header">
+        <span class="slide-subtitle">04 / Component 1</span>
+        <span class="slide-number">Slide 4 of 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="slide-left">
+          <h2 class="slide-title">Smart Crop Recommendation Engine</h2>
+          <p class="slide-desc">Leverages pre-mapped geographic telemetry to eliminate crop planting risks.</p>
+          <div class="slide-bullets">
+            <div class="bullet-item">
+              <i data-lucide="map-pin" class="bullet-icon"></i>
+              <span><strong>Geographic Lookup</strong>: Automatically matches districts (e.g. Kolar, Karnataka) with soil parameters.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="file-text" class="bullet-icon"></i>
+              <span><strong>Digital Soil Card</strong>: Calculates dynamic Nitrogen (N), Phosphorus (P), Potassium (K), soil pH, and moisture.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="sliders" class="bullet-icon"></i>
+              <span><strong>Dynamic Calibration</strong>: Farmers adjust values to run simulations and compare crop suitability indexes.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="check-square" class="bullet-icon"></i>
+              <span><strong>Recommended Varieties</strong>: Recommends specific crop types (e.g., Ragi, Tomato) matching target parameters.</span>
+            </div>
+          </div>
+        </div>
+        <div class="slide-right">
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <img src="assets/slide_dashboard.png" alt="Crop Recommendation Dashboard Screen Mockup">
+            <div class="mockup-badge badge-lime">1. Smart Recommender</div>
+          </div>
+          <div class="floating-card" style="top: 40px; left: -40px;">
+            <i data-lucide="map-pin"></i>
+            <span>Kolar District Soil Profile</span>
+          </div>
+          <div class="floating-card" style="bottom: 60px; right: -40px;">
+            <i data-lucide="sliders"></i>
+            <span>Suitability Calibration Sliders</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Component 2 - Real-Time Advisories & Alerts -->
+    <div class="slide" data-slide="5">
+      <div class="slide-header">
+        <span class="slide-subtitle">05 / Component 2</span>
+        <span class="slide-number">Slide 5 of 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="slide-left">
+          <h2 class="slide-title">Real-Time Advisory & Dry-Spell Alerts</h2>
+          <p class="slide-desc">Monitors fields dynamically to prevent dry-spell damage using localized alerts.</p>
+          <div class="slide-bullets">
+            <div class="bullet-item">
+              <i data-lucide="activity" class="bullet-icon"></i>
+              <span><strong>Ground Sensor Simulation</strong>: Tracks moisture, temperature, and groundwater parameters across village plots.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="broadcast" class="bullet-icon"></i>
+              <span><strong>Automated Alerts</strong>: Instantly dispatches a warning when sensor levels fall below critical dry thresholds.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="message-square" class="bullet-icon"></i>
+              <span><strong>Indic SMS Dispatch</strong>: Sends clear warnings advising on irrigation times, fertilization adjustments, and water saving.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="volume-2" class="bullet-icon"></i>
+              <span><strong>Voice Call Announcements</strong>: Multi-lingual Text-to-Speech call simulation reads alerts out loud for low-literacy users.</span>
+            </div>
+          </div>
+        </div>
+        <div class="slide-right">
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <img src="assets/slide_dashboard.png" alt="Advisories and Telemetry Screen Mockup">
+            <div class="mockup-badge badge-amber">2. Telemetry Sensors</div>
+          </div>
+          <div class="floating-card" style="top: 80px; left: -50px;">
+            <i data-lucide="activity"></i>
+            <span>Live Groundwater Tracking</span>
+          </div>
+          <div class="floating-card" style="bottom: 40px; right: -50px;">
+            <i data-lucide="message-square"></i>
+            <span>Automated SMS Dry-Spell Warnings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: Component 3 - Crop Health AI Diagnostics -->
+    <div class="slide" data-slide="6">
+      <div class="slide-header">
+        <span class="slide-subtitle">06 / Component 3</span>
+        <span class="slide-number">Slide 6 of 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="slide-left">
+          <h2 class="slide-title">AI Crop Health Logger & RSK Connectivity</h2>
+          <p class="slide-desc">Enables rapid pest and pathogen diagnostic support by connecting farmers directly with regional agricultural officers.</p>
+          <div class="slide-bullets">
+            <div class="bullet-item">
+              <i data-lucide="upload-cloud" class="bullet-icon"></i>
+              <span><strong>Local File Uploader</strong>: Farmers pick leaf images via the file explorer or input voice memo queries.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="cpu" class="bullet-icon"></i>
+              <span><strong>Diagnostic AI Matching</strong>: Identifies crop pathogens (Rice Blast, Cotton Curl, Early Blight) with confidence metrics.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="help-circle" class="bullet-icon"></i>
+              <span><strong>Instant Solutions</strong>: Lists immediate symptoms, organic prevention methods, and chemical treatment guidelines.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="send" class="bullet-icon"></i>
+              <span><strong>Rythu Seva Kendra dispatch</strong>: Automatically files support tickets, allowing RSK experts to review and follow up.</span>
+            </div>
+          </div>
+        </div>
+        <div class="slide-right">
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <img src="assets/slide_app.png" alt="Crop Health Diagnostics Scanner Mockup">
+            <div class="mockup-badge badge-rose">3. AI Diagnostics</div>
+          </div>
+          <div class="floating-card" style="top: 50px; left: -40px;">
+            <i data-lucide="camera"></i>
+            <span>Leaf Photo Explorer Uploader</span>
+          </div>
+          <div class="floating-card" style="bottom: 80px; right: -40px;">
+            <i data-lucide="cpu"></i>
+            <span>92% Scanner Pathogen Confidence</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Technical Stack & Architecture -->
+    <div class="slide" data-slide="7">
+      <div class="slide-header">
+        <span class="slide-subtitle">07 / System Tech</span>
+        <span class="slide-number">Slide 7 of 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="slide-left">
+          <h2 class="slide-title">Technical Stack & Architectural Fit</h2>
+          <p class="slide-desc">Engineered with high-contrast UI parameters and browser APIs to run fluid simulations.</p>
+          <div class="tech-grid">
+            <div class="tech-card">
+              <i data-lucide="laptop"></i>
+              <span>HTML5 & CSS3</span>
+              <p>Tailored variables, dynamic dark theme legibility, and responsive fluid wraps.</p>
+            </div>
+            <div class="tech-card">
+              <i data-lucide="terminal"></i>
+              <span>Vanilla JS & JSON</span>
+              <p>Localized translate matrix, dynamic soil generation, and local state variables.</p>
+            </div>
+            <div class="tech-card">
+              <i data-lucide="bar-chart-2"></i>
+              <span>Chart.js & FileReader</span>
+              <p>Moisture progression charts and local leaf uploader bindings.</p>
+            </div>
+            <div class="tech-card">
+              <i data-lucide="megaphone"></i>
+              <span>Web Speech & Audio API</span>
+              <p>Simulates telephone rings and reads voice alerts in Indic languages.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Business Value & Social Impact -->
+    <div class="slide" data-slide="8">
+      <div class="slide-header">
+        <span class="slide-subtitle">08 / Livelihoods</span>
+        <span class="slide-number">Slide 8 of 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="slide-left">
+          <h2 class="slide-title">Social Impact & Livelihood Value</h2>
+          <p class="slide-desc">By delivering advanced data through accessible channels, Kisan Alert protects smallholders from climate-related financial shocks.</p>
+          <div class="slide-bullets">
+            <div class="bullet-item">
+              <i data-lucide="activity" class="bullet-icon"></i>
+              <span><strong>Reduced Resource Waste</strong>: Soil health matching prevents spending capital on unsuitable seeds and fertilizers.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="smartphone" class="bullet-icon"></i>
+              <span><strong>Accessibility First</strong>: Farmers without smartphones or internet access receive warnings via voice/SMS simulations.</span>
+            </div>
+            <div class="bullet-item">
+              <i data-lucide="git-pull-request" class="bullet-icon"></i>
+              <span><strong>Closed-Loop Expert Support</strong>: Connects rural farms directly to localized expert advisory desks (RSK).</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer Navigation -->
+  <footer>
+    <div class="slide-indicators" id="slide-indicators">
+      <div class="indicator active" onclick="goToSlide(1)"></div>
+      <div class="indicator" onclick="goToSlide(2)"></div>
+      <div class="indicator" onclick="goToSlide(3)"></div>
+      <div class="indicator" onclick="goToSlide(4)"></div>
+      <div class="indicator" onclick="goToSlide(5)"></div>
+      <div class="indicator" onclick="goToSlide(6)"></div>
+      <div class="indicator" onclick="goToSlide(7)"></div>
+      <div class="indicator" onclick="goToSlide(8)"></div>
+    </div>
+    
+    <div class="controls-row">
+      <button class="btn-action btn-pdf" id="btn-print-pdf">
+        <i data-lucide="printer"></i>
+        <span>Save as PDF</span>
+      </button>
+      <button class="btn-action" id="btn-notes-toggle">
+        <i data-lucide="mic"></i>
+        <span>Show Speaker Notes</span>
+      </button>
+      <button class="nav-btn" id="btn-prev" title="Previous Slide">
+        <i data-lucide="chevron-left"></i>
+      </button>
+      <button class="nav-btn" id="btn-next" title="Next Slide">
+        <i data-lucide="chevron-right"></i>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Speaker Notes Drawer -->
+  <div class="notes-drawer" id="notes-drawer">
+    <div class="notes-header">
+      <span class="notes-title">
+        <i data-lucide="mic"></i>
+        <span>Speaker Script</span>
+      </span>
+      <button class="notes-close" id="btn-notes-close">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="notes-content" id="notes-content">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <script>
+    // Speaker scripts database
+    const speakerScripts = {
+      1: "<strong>Slide 1 Script:</strong> \"Good morning everyone. Today, I am proud to present Kisan Alert—an agricultural intelligence platform designed specifically for India's small and marginal farmers. Our platform translates complex satellite, soil, and sensor data into simple, actionable advisories delivered directly via local Indic languages, SMS, and voice call interfaces to solve the problem of crop failure.\"",
+      2: "<strong>Slide 2 Script:</strong> \"Farmers across India face severe crop failures from unpredictable monsoon rainfall. Crop choices are made by habit or hearsay, rather than scientific soil testing or groundwater data, leading to wasted resources and massive financial debts when climate spells fail. Kisan Alert directly resolves this mismatch.\"",
+      3: "<strong>Slide 3 Script:</strong> \"Our solution consists of three main components: First, a Smart Crop Recommendation Engine using soil nutrient mappings. Second, real-time ground moisture telemetry and automated dry-spell warning alerts. Third, an AI crop health diagnostic uploader linking farmers directly with regional Rythu Seva Kendras for professional expert support.\"",
+      4: "<strong>Slide 4 Script:</strong> \"For Component 1, the Smart Crop Recommendation Engine uses searchable regional profiles to fetch pre-mapped soil metrics. It generates a Digital Soil Health Card displaying active Nitrogen, Phosphorus, Potassium, pH, and moisture parameters. Farmers can adjust suitability sliders to dynamically find recommended seed varieties.\"",
+      5: "<strong>Slide 5 Script:</strong> \"For Component 2, the system tracks ground sensors across plots. If moisture levels fall below critical safety marks, the engine broadcasts automated warning notifications in Indic languages. For feature phone users, it simulates immediate SMS warnings advising on water-saving irrigation.\"",
+      6: "<strong>Slide 6 Script:</strong> \"For Component 3, crop health logging allows farmers to upload leaf photo files using our custom File uploader. The diagnostic scanner classifies leaf pathogens like Rice Leaf Blast or Cotton Curl virus, matches confidence metrics, outputs chemical and organic solutions, and dispatches a case ticket directly to RSK experts.\"",
+      7: "<strong>Slide 7 Script:</strong> \"Technically, the platform uses zero-dependency HTML5, CSS3 variables, and vanilla JavaScript. It runs simulated voice calls using the browser's Web Speech API for multilingual speech synthesis, tracks moisture variations with Chart.js, and reads user files via FileReader. It is fully responsive and hosted on Netlify.\"",
+      8: "<strong>Slide 8 Script:</strong> \"By combining simple voice/SMS channels with a robust administrative expert portal, Kisan Alert ensures that advanced scientific agronomy reaches the farmers who need it most. It protects crop investments and builds resilience against weather shocks. Thank you. I am happy to open the floor to questions.\""
+    };
+
+    let currentSlide = 1;
+    const totalSlides = 8;
+
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    function goToSlide(slideNum) {
+      if (slideNum < 1 || slideNum > totalSlides) return;
+      
+      // Update active slide class
+      document.querySelectorAll(".slide").forEach(s => s.classList.remove("active"));
+      document.querySelector(`.slide[data-slide="${slideNum}"]`).classList.add("active");
+
+      // Update indicators
+      document.querySelectorAll(".indicator").forEach((ind, index) => {
+        if (index + 1 === slideNum) ind.classList.add("active");
+        else ind.classList.remove("active");
+      });
+
+      currentSlide = slideNum;
+      updateSpeakerNotes(slideNum);
+    }
+
+    function updateSpeakerNotes(slideNum) {
+      document.getElementById("notes-content").innerHTML = speakerScripts[slideNum];
+    }
+
+    // Event listeners
+    document.getElementById("btn-prev").addEventListener("click", () => {
+      if (currentSlide > 1) goToSlide(currentSlide - 1);
+    });
+
+    document.getElementById("btn-next").addEventListener("click", () => {
+      if (currentSlide < totalSlides) goToSlide(currentSlide + 1);
+    });
+
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === " ") {
+        if (currentSlide < totalSlides) goToSlide(currentSlide + 1);
+      } else if (e.key === "ArrowLeft") {
+        if (currentSlide > 1) goToSlide(currentSlide - 1);
+      }
+    });
+
+    // Speaker Notes Drawer Toggle
+    const notesDrawer = document.getElementById("notes-drawer");
+    const notesBtn = document.getElementById("btn-notes-toggle");
+    const notesBtnText = notesBtn.querySelector("span");
+    const notesCloseBtn = document.getElementById("btn-notes-close");
+
+    notesBtn.addEventListener("click", () => {
+      notesDrawer.classList.toggle("active");
+      if (notesDrawer.classList.contains("active")) {
+        notesBtnText.textContent = "Hide Speaker Notes";
+      } else {
+        notesBtnText.textContent = "Show Speaker Notes";
+      }
+    });
+
+    notesCloseBtn.addEventListener("click", () => {
+      notesDrawer.classList.remove("active");
+      notesBtnText.textContent = "Show Speaker Notes";
+    });
+
+    // Dynamic print triggers: bind standard window events to toggle printing classes
+    window.addEventListener("beforeprint", () => {
+      document.body.classList.add("printing-active");
+    });
+    window.addEventListener("afterprint", () => {
+      document.body.classList.remove("printing-active");
+    });
+
+    // PDF Printer Listener (Active printing state toggle)
+    document.getElementById("btn-print-pdf").addEventListener("click", () => {
+      window.print();
+    });
+
+    // Parse query parameter to set initial slide
+    const urlParams = new URLSearchParams(window.location.search);
+    const startSlide = parseInt(urlParams.get('slide'));
+    if (startSlide >= 1 && startSlide <= totalSlides) {
+      goToSlide(startSlide);
+    } else {
+      goToSlide(1);
+    }
+  </script>
+</body>
+</html>
